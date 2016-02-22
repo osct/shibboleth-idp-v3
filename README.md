@@ -2,6 +2,7 @@ Role Name
 =========
 
 The roles will install the Shibboleth Identity Provider v. 3 with tomcat8 into a debian based machine.
+Tomcat has to be configured from the debian packages because it is
 
 Requirements
 ------------
@@ -14,10 +15,15 @@ Role Variables
 
 A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
 
+
+``idp_attributes_scope``
+
 Dependencies
 ------------
 
 A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+
+pexpect >= 3.3
 
 Example Playbook
 ----------------
@@ -26,7 +32,7 @@ Including an example of how to use your role (for instance, with variables passe
 
     - hosts: idp
       roles:
-         - { role: shibboleth-idp-v3 }
+         - osct.shibboleth-idp-v3
 
 License
 -------

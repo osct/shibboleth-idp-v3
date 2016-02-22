@@ -1,2 +1,4 @@
 ---
-# defaults file for fmarco76.shibboleth-idp-v3
+idp_version: '3.2.1'
+idp_backchannel_PKCS12_password: 'changeit'
+idp_cookie_encryption_key_passwor: 'changeit2'

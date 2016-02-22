@@ -1,2 +1,18 @@
 ---
-# vars file for fmarco76.shibboleth-idp-v3
+# Perform the installation as root
+ansible_become: yes
+
+# Location containing the source package
+idp_package_local_dir: '/root/shibboleth_idp'
+
+# Installation directory
+idp_home: '/opt/shibboleth-idp'
+
+# Tomcat service name
+tomcat_service_name: 'tomcat8'
+
+# Tomcat 8 user
+tomcat_user: 'tomcat8'
+
+# Tomcat 8 group
+tomcat_group: 'tomcat8'

@@ -1,2 +1,9 @@
 ---
-# handlers file for fmarco76.shibboleth-idp-v3
+
+- name: Restart tomcat
+  service: state=restarted name={{ tomcat_service_name }}
+  tags: tomcat
+
+- name: Restart tomcat in docker
+  shell: killall -9 java ; service tomcat8 start ; echo
+  tags: tomcat
