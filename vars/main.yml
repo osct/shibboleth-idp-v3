@@ -2,6 +2,9 @@
 # Perform the installation as root
 ansible_become: yes
 
+# Version of the shibboleth IdP installed
+idp_version: '3.2.1'
+
 # Location containing the source package
 idp_package_local_dir: '/root/shibboleth_idp'
 
@@ -16,3 +19,6 @@ tomcat_user: 'tomcat8'
 
 # Tomcat 8 group
 tomcat_group: 'tomcat8'
+
+# Path to LDAP server certificate
+idp.authn.LDAP.trustCertificates: 'credentials/ldap-server.crt'

@@ -18,6 +18,11 @@ A description of the settable variables for this role should go here, including 
 
 ``idp_attributes_scope``
 
+
+``LDAP.server.certificate``
+
+
+
 Dependencies
 ------------
 

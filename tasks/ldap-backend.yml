@@ -1,0 +1,145 @@
+---
+- name: Configure the attributes to resolve
+  copy:
+    src: shibboleth-idp/conf/attribute-resolver-ldap.xml
+    dest: "{{ idp_home }}/conf/attribute-resolver.xml"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: 0600
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP url
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.ldapURL                          = {{ idp.authn.LDAP.ldapURL }}"
+    regexp: "^idp.authn.LDAP.ldapURL"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP StartTLS
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.useStartTLS                      = {{ idp.authn.LDAP.useStartTLS }}"
+    regexp: "idp.authn.LDAP.useStartTLS(.*)=e$"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Copy LDAP certificate
+  copy:
+    src: "{{ LDAP.server.certificate }}"
+    dest: "{{ idp_home }}/{{ idp.authn.LDAP.trustCertificates }}"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: 0600
+  when: LDAP.server.certificate is defined
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP StartTLS Server Certificate
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.trustCertificates                = %{idp.home}/{{ idp.authn.LDAP.trustCertificates }}"
+    regexp: "^idp.authn.LDAP.trustCertificates"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP base DN
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.baseDN                           = {{ idp.authn.LDAP.baseDN }}"
+    regexp: "^idp.authn.LDAP.baseDN"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP user filter
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.userFilter                       = {{ idp.authn.LDAP.userFilter }}"
+    regexp: "^idp.authn.LDAP.userFilter"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP bind DN
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.bindDN                           = {{ idp.authn.LDAP.bindDN }}"
+    regexp: "^idp.authn.LDAP.bindDN"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP bind DN credentials
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.bindDNCredential                 = {{ idp.authn.LDAP.bindDNCredential }}"
+    regexp: "^idp.authn.LDAP.bindDNCredential"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP DN format
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.authn.LDAP.dnFormat                         = {{ idp.authn.LDAP.dnFormat }}"
+    regexp: "^idp.authn.LDAP.dnFormat"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP resolver search filter
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.attribute.resolver.LDAP.searchFilter        = {{ idp.attribute.resolver.LDAP.searchFilter }}"
+    regexp: "^idp.attribute.resolver.LDAP.searchFilter"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure LDAP resolver attribute list
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "idp.attribute.resolver.LDAP.returnAttributes    = {{ idp.attribute.resolver.LDAP.returnAttributes }}"
+    regexp: "^idp.attribute.resolver.LDAP.returnAttributes"
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure the Password flow for authentication
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.authn.flows= Password"
+    regexp: "^idp.authn.flows="
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Configure the Password flow with LDAP backend
+  lineinfile:
+    dest: "{{ idp_home }}/conf/authn/password-authn-config.xml"
+    line: '    <import resource="ldap-authn-config.xml" />'
+    regexp: "^[ ]*<import resource="
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap

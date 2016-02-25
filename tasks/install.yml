@@ -1,0 +1,68 @@
+---
+- name: Check OS
+  assert: { that: "ansible_os_family == 'Debian'" }
+  tags:
+    - shibboleth
+    - idp_ install
+
+- name: Create directory for shibboleth package
+  file:
+    path: "{{ idp_package_local_dir }}"
+    state: directory
+  tags:
+    - shibboleth
+    - idp_install
+
+- name: Get the package
+  unarchive:
+    src: https://shibboleth.net/downloads/identity-provider/{{ idp_version }}/shibboleth-identity-provider-{{ idp_version }}.tar.gz
+    copy: no
+    dest: "{{ idp_package_local_dir }}"
+  tags:
+    - shibboleth
+    - idp_install
+
+- name: Execute the installer
+  expect:
+    chdir: "{{ idp_package_local_dir }}/shibboleth-identity-provider-{{ idp_version }}"
+    creates: "{{ idp_home }}"
+    command: "/bin/bash bin/install.sh"
+    timeout: 30
+    echo: yes
+    responses:
+      'Source .*': "{{ idp_package_local_dir }}/shibboleth-identity-provider-{{ idp_version }}"
+      'Installation .*' : "{{ idp_home }}"
+      Hostname: "{{ ansible_fqdn }}"
+      SAML EntityID: "https://{{ ansible_fqdn }}/idp/shibboleth"
+      Attribute Scope: "{{ idp_attributes_scope if idp_attributes_scope is defined else ansible_domain }}"
+      Backchannel PKCS12 Password: "{{ idp_backchannel_PKCS12_password }}"
+      Re-enter password:
+        - "{{ idp_backchannel_PKCS12_password }}"
+        - "{{ idp_cookie_encryption_key_passwor }}"
+      Cookie Encryption Key Password: "{{ idp_cookie_encryption_key_passwor }}"
+  tags:
+    - shibboleth
+    - idp_install
+
+- name: Make tomcat the shibboleth owner
+  file:
+    state: directory
+    path: "{{ idp_home }}"
+    recurse: yes
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  tags:
+    - shibboleth
+    - idp_install
+
+- name: Add the idp context in tomcat
+  template:
+    src: tomcat/idp.xml.j2
+    dest: /etc/{{ tomcat_service_name }}/Catalina/localhost/idp.xml
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: 0644
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_install

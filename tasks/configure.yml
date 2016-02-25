@@ -1,0 +1,21 @@
+---
+- name: Check the attribute database is supported
+  fail: msg="{{ idp_attribute_database }} backend not supported at the moment"
+  when: idp_attribute_database != "ldap"
+  tags:
+    - shibboleth
+    - idp_configure
+
+- include: ldap-backend.yml
+  when: idp_attribute_database == "ldap"
+
+- name: Configure the attributes filter
+  copy:
+    src: shibboleth-idp/conf/attribute-filter.xml
+    dest: "{{ idp_home }}/conf/attribute-filter.xml"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+    mode: 0600
+  tags:
+    - shibboleth
+    - idp_configure

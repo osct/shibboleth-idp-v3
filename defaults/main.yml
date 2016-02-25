@@ -1,4 +1,37 @@
 ---
-idp_version: '3.2.1'
+
+# Password for the backend channel certificate/key
 idp_backchannel_PKCS12_password: 'changeit'
+
+# Password for cookie encryption certificate/key
 idp_cookie_encryption_key_passwor: 'changeit2'
+
+# Attribute database type (possible value are 'ldap' and 'mysql' but 'mysql' not implemented yet)
+idp_attribute_database: 'ldap'
+
+# LDAP URL
+idp.authn.LDAP.ldapURL: 'ldap://localhost:10389'
+
+# LDAP uses StartTLS
+idp.authn.LDAP.useStartTLS: 'false'
+
+# LDAP base DN
+idp.authn.LDAP.baseDN: 'ou=people,dc=example,dc=org'
+
+# LDAP user filter
+idp.authn.LDAP.userFilter: '(uid={user})'
+
+# LDAP bind DN
+idp.authn.LDAP.bindDN: 'uid=myservice,ou=system'
+
+# LDAP bind DN credentials
+idp.authn.LDAP.bindDNCredential: 'myServicePassword'
+
+# LDAP DN format
+idp.authn.LDAP.dnFormat: 'uid=%s,ou=people,dc=example,dc=org'
+
+# LDAP resolver search filter
+idp.attribute.resolver.LDAP.searchFilter: '(uid=$resolutionContext.principal)'
+
+# LDAP resolver attribute list
+idp.attribute.resolver.LDAP.returnAttributes: 'cn,homephone,mail'
