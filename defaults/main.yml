@@ -4,7 +4,7 @@
 idp_backchannel_PKCS12_password: 'changeit'
 
 # Password for cookie encryption certificate/key
-idp_cookie_encryption_key_passwor: 'changeit2'
+idp_cookie_encryption_key_password: 'changeit2'
 
 # Attribute database type (possible value are 'ldap' and 'mysql' but 'mysql' not implemented yet)
 idp_attribute_database: 'ldap'

@@ -30,16 +30,16 @@
     timeout: 30
     echo: yes
     responses:
-      'Source .*': "{{ idp_package_local_dir }}/shibboleth-identity-provider-{{ idp_version }}"
-      'Installation .*' : "{{ idp_home }}"
-      Hostname: "{{ ansible_fqdn }}"
-      SAML EntityID: "https://{{ ansible_fqdn }}/idp/shibboleth"
-      Attribute Scope: "{{ idp_attributes_scope if idp_attributes_scope is defined else ansible_domain }}"
-      Backchannel PKCS12 Password: "{{ idp_backchannel_PKCS12_password }}"
-      Re-enter password:
+      "Source .*": "{{ idp_package_local_dir }}/shibboleth-identity-provider-{{ idp_version }}"
+      "Installation .*": "{{ idp_home }}"
+      "Hostname: .*": "{{ ansible_fqdn }}"
+      "SAML EntityID: .*": "https://{{ ansible_fqdn }}/idp/shibboleth"
+      "Attribute Scope: .*": "{{ idp_attributes_scope if idp_attributes_scope is defined else ansible_domain }}"
+      "Backchannel PKCS12 Password: ": "{{ idp_backchannel_PKCS12_password }}"
+      "Re-enter password: ":
         - "{{ idp_backchannel_PKCS12_password }}"
-        - "{{ idp_cookie_encryption_key_passwor }}"
-      Cookie Encryption Key Password: "{{ idp_cookie_encryption_key_passwor }}"
+        - "{{ idp_cookie_encryption_key_password }}"
+      "Cookie Encryption Key Password: ": "{{ idp_cookie_encryption_key_password }}"
   tags:
     - shibboleth
     - idp_install
