@@ -21,4 +21,4 @@ tomcat_user: 'tomcat8'
 tomcat_group: 'tomcat8'
 
 # Path to LDAP server certificate
-idp.authn.LDAP.trustCertificates: 'credentials/ldap-server.crt'
+idp_authn_LDAP_trustCertificates: 'credentials/ldap-server.crt'

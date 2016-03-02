@@ -2,8 +2,12 @@
 
 - name: Restart tomcat
   service: state=restarted name={{ tomcat_service_name }}
-  tags: tomcat
+  tags:
+    - tomcat
+    - shibboleth
 
 - name: Restart tomcat in docker
-  shell: killall -9 java ; service tomcat8 start ; echo
-  tags: tomcat
+  shell: killall -9 java ; systemctl start tomcat8 ; echo
+  tags:
+    - tomcat
+    - shibboleth

@@ -2,6 +2,7 @@
 - name: Check the attribute database is supported
   fail: msg="{{ idp_attribute_database }} backend not supported at the moment"
   when: idp_attribute_database != "ldap"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
   tags:
     - shibboleth
     - idp_configure
@@ -11,12 +12,71 @@
 
 - name: Configure the attributes filter
   copy:
-    src: shibboleth-idp/conf/attribute-filter.xml
+    src: "{{ idp_attribute_filter }}"
     dest: "{{ idp_home }}/conf/attribute-filter.xml"
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
     mode: 0600
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
   tags:
     - shibboleth
     - idp_configure
 
+- name: Persistent identifier enabled
+  lineinfile:
+    dest: "{{ idp_home }}/conf/saml-nameid.properties"
+    line: "idp.persistentId.generator = shibboleth.ComputedPersistentIdGenerator"
+    regexp: "idp.persistentId.generator"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_attribute_persistent_id
+  tags:
+    - shibboleth
+    - idp_configure
+
+- name: Persistent identifier source attribute
+  lineinfile:
+    dest: "{{ idp_home }}/conf/saml-nameid.properties"
+    line: "idp.persistentId.sourceAttribute= {{ idp_persistentId_sourceAttribute }}"
+    regexp: "idp.persistentId.sourceAttribute"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_attribute_persistent_id
+  tags:
+    - shibboleth
+    - idp_configure
+
+- debug: msg=""
+  when: idp_persistentId_salt == "provideasecuresaltpassphraseforthepersistentid"
+
+- name: Persistent identifier salt
+  lineinfile:
+    dest: "{{ idp_home }}/conf/saml-nameid.properties"
+    line: "idp.persistentId.salt= {{ idp_persistentId_salt }}"
+    regexp: "idp.persistentId.salt"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_attribute_persistent_id
+  tags:
+    - shibboleth
+    - idp_configure
+
+- name: Persistent identifier bean
+  blockinfile:
+    dest: "{{ idp_home }}/conf/saml-nameid.xml"
+    content: '<ref bean="shibboleth.SAML2PersistentGenerator" />'
+    marker: "<-- Managed block {mark} -->"
+    insertafter: "shibboleth.SAML2TransientGenerator"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_attribute_persistent_id
+  tags:
+    - shibboleth
+    - idp_configure
+
+- name: Enable Single Logout (SLO)
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.session.trackSPSessions = true"
+    regexp: "idp.session.trackSPSessions"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_session_trackSPSessions
+  tags:
+    - shibboleth
+    - idp_configure

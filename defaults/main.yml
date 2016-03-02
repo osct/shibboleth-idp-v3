@@ -9,29 +9,47 @@ idp_cookie_encryption_key_password: 'changeit2'
 # Attribute database type (possible value are 'ldap' and 'mysql' but 'mysql' not implemented yet)
 idp_attribute_database: 'ldap'
 
+# Path to the default attribute resolver to use for an LDAP based IdP
+idp_authn_LDAP_attribute_resolver: 'shibboleth-idp/conf/attribute-resolver-ldap.xml'
+
 # LDAP URL
-idp.authn.LDAP.ldapURL: 'ldap://localhost:10389'
+idp_authn_LDAP_ldapURL: 'ldap://localhost:10389'
 
 # LDAP uses StartTLS
-idp.authn.LDAP.useStartTLS: 'false'
+idp_authn_LDAP_useStartTLS: 'false'
 
 # LDAP base DN
-idp.authn.LDAP.baseDN: 'ou=people,dc=example,dc=org'
+idp_authn_LDAP_baseDN: 'ou=people,dc=example,dc=org'
 
 # LDAP user filter
-idp.authn.LDAP.userFilter: '(uid={user})'
+idp_authn_LDAP_userFilter: '(uid={user})'
 
 # LDAP bind DN
-idp.authn.LDAP.bindDN: 'uid=myservice,ou=system'
+idp_authn_LDAP_bindDN: 'uid=myservice,ou=system'
 
 # LDAP bind DN credentials
-idp.authn.LDAP.bindDNCredential: 'myServicePassword'
+idp_authn_LDAP_bindDNCredential: 'myServicePassword'
 
 # LDAP DN format
-idp.authn.LDAP.dnFormat: 'uid=%s,ou=people,dc=example,dc=org'
+idp_authn_LDAP_dnFormat: 'uid=%s,ou=people,dc=example,dc=org'
 
 # LDAP resolver search filter
-idp.attribute.resolver.LDAP.searchFilter: '(uid=$resolutionContext.principal)'
+idp_attribute_resolver_LDAP_searchFilter: '(uid=$resolutionContext.principal)'
 
 # LDAP resolver attribute list
-idp.attribute.resolver.LDAP.returnAttributes: 'cn,homephone,mail'
+idp_attribute_resolver_LDAP_returnAttributes: 'cn,homephone,mail'
+
+# Enable the release of a persistent identifier
+idp_attribute_persistent_id: False
+
+# Path to the default attribute filer releasing eppn, mail, surname, givenname and displayname to services requiring them
+idp_attribute_filter: 'shibboleth-idp/conf/attribute-filter.xml'
+
+# Source attribute for the persistent Id
+idp_persistentId_sourceAttribute: 'cn'
+
+# Salt for the persistent Id
+idp_persistentId_salt: 'provideasecuresaltpassphraseforthepersistentid'
+
+# Enable Single LogOut (SLO)
+idp_session_trackSPSessions: True
