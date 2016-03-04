@@ -36,7 +36,7 @@
 - name: Persistent identifier source attribute
   lineinfile:
     dest: "{{ idp_home }}/conf/saml-nameid.properties"
-    line: "idp.persistentId.sourceAttribute= {{ idp_persistentId_sourceAttribute }}"
+    line: "idp.persistentId.sourceAttribute = {{ idp_persistentId_sourceAttribute }}"
     regexp: "idp.persistentId.sourceAttribute"
   notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
   when: idp_attribute_persistent_id
@@ -44,13 +44,24 @@
     - shibboleth
     - idp_configure
 
-- debug: msg=""
+- name: Persistent identifier format
+  lineinfile:
+    dest: "{{ idp_home }}/conf/saml-nameid.properties"
+    line: "idp.nameid.saml2.default = {{ idp_nameid_format }}"
+    regexp: "idp.nameid.saml2.default"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_attribute_persistent_id
+  tags:
+    - shibboleth
+    - idp_configure
+
+- debug: msg="The salt has not been customised. Please change the value of 'idp_persistentId_salt' to make the persistent identifier secure"
   when: idp_persistentId_salt == "provideasecuresaltpassphraseforthepersistentid"
 
 - name: Persistent identifier salt
   lineinfile:
     dest: "{{ idp_home }}/conf/saml-nameid.properties"
-    line: "idp.persistentId.salt= {{ idp_persistentId_salt }}"
+    line: "idp.persistentId.salt = {{ idp_persistentId_salt }}"
     regexp: "idp.persistentId.salt"
   notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
   when: idp_attribute_persistent_id
@@ -62,8 +73,20 @@
   blockinfile:
     dest: "{{ idp_home }}/conf/saml-nameid.xml"
     content: '<ref bean="shibboleth.SAML2PersistentGenerator" />'
-    marker: "<-- Managed block {mark} -->"
+    marker: "<!-- Managed block {mark} -->"
     insertafter: "shibboleth.SAML2TransientGenerator"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: idp_attribute_persistent_id
+  tags:
+    - shibboleth
+    - idp_configure
+
+- name: Persistent identifier subject
+  blockinfile:
+    dest: "{{ idp_home }}/conf/c14n/subject-c14n.xml"
+    content: '<ref bean="c14n/SAML2Persistent" />'
+    marker: "<!-- Managed block {mark} -->"
+    insertafter: "Handle a SAML 2 persistent ID"
   notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
   when: idp_attribute_persistent_id
   tags:
@@ -73,10 +96,54 @@
 - name: Enable Single Logout (SLO)
   lineinfile:
     dest: "{{ idp_home }}/conf/idp.properties"
-    line: "idp.session.trackSPSessions = true"
+    line: "idp.session.trackSPSessions = {{ 'true' if idp_session_trackSPSessions else 'false' }}"
     regexp: "idp.session.trackSPSessions"
   notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
-  when: idp_session_trackSPSessions
   tags:
     - shibboleth
     - idp_configure
+
+- name: Add metadata providers by url
+  template:
+    src: shibboleth-idp/conf/metadata-providers.xml.j2
+    dest: "{{ idp_home }}/conf/metadata-providers.xml"
+    mode: 0600
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_configure
+    - metadata_providers
+
+- name: Retrieve certificate for metadata providers
+  get_url:
+    url: "{{ item.certificate.url }}"
+    dest: "{{ idp_home }}/metadata/{{ item.name }}.pem"
+    mode: 0600
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  when: item.certificate is defined and  item.certificate.url is defined
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  with_items:
+    - "{{ metadataproviders }}"
+  tags:
+    - shibboleth
+    - idp_configure
+    - metadata_providers
+
+- name: Copy certificate for metadata providers
+  copy:
+    src: "{{ item.certificate.path }}"
+    dest: "{{ idp_home }}/metadata/{{ item.name }}.pem"
+    mode: 0600
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  when: item.certificate is defined and  item.certificate.path is defined
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  with_items:
+    - "{{ metadataproviders }}"
+  tags:
+    - shibboleth
+    - idp_configure
+    - metadata_providers

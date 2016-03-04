@@ -22,3 +22,6 @@ tomcat_group: 'tomcat8'
 
 # Path to LDAP server certificate
 idp_authn_LDAP_trustCertificates: 'credentials/ldap-server.crt'
+
+# Source attribute for the persistent Id
+idp_persistentId_sourceAttribute: 'eduPersonPrincipalName'

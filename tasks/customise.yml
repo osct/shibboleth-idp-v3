@@ -1,0 +1,10 @@
+---
+- name: Set fallback language
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.ui.fallbackLanguages= {{ idp_ui_fallbackLanguages }}"
+    regexp: "^idp.ui.fallbackLanguages"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_customise

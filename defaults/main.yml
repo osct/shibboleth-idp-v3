@@ -10,7 +10,7 @@ idp_cookie_encryption_key_password: 'changeit2'
 idp_attribute_database: 'ldap'
 
 # Path to the default attribute resolver to use for an LDAP based IdP
-idp_authn_LDAP_attribute_resolver: 'shibboleth-idp/conf/attribute-resolver-ldap.xml'
+idp_authn_LDAP_attribute_resolver: 'shibboleth-idp/conf/attribute-resolver-ldap-nossl.xml'
 
 # LDAP URL
 idp_authn_LDAP_ldapURL: 'ldap://localhost:10389'
@@ -45,11 +45,14 @@ idp_attribute_persistent_id: False
 # Path to the default attribute filer releasing eppn, mail, surname, givenname and displayname to services requiring them
 idp_attribute_filter: 'shibboleth-idp/conf/attribute-filter.xml'
 
-# Source attribute for the persistent Id
-idp_persistentId_sourceAttribute: 'cn'
-
 # Salt for the persistent Id
 idp_persistentId_salt: 'provideasecuresaltpassphraseforthepersistentid'
 
 # Enable Single LogOut (SLO)
-idp_session_trackSPSessions: True
+idp_session_trackSPSessions: False
+
+# Browser language support
+idp_ui_fallbackLanguages: 'en'
+
+# Format to use for the subject name identifier
+idp_nameid_format: 'urn:oasis:names:tc:SAML:2.0:nameid-format:persistent'

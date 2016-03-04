@@ -36,13 +36,13 @@
 
 - name: Copy LDAP certificate
   copy:
-    src: "{{ LDAP.server.certificate }}"
+    src: "{{ LDAP_server_certificate }}"
     dest: "{{ idp_home }}/{{ idp_authn_LDAP_trustCertificates }}"
     owner: "{{ tomcat_user }}"
     group: "{{ tomcat_group }}"
     mode: 0600
   notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
-  when: LDAP.server.certificate is defined
+  when: LDAP_server_certificate is defined
   tags:
     - shibboleth
     - idp_configure
@@ -52,8 +52,21 @@
   lineinfile:
     dest: "{{ idp_home }}/conf/ldap.properties"
     line: "idp.authn.LDAP.trustCertificates                = %{idp.home}/{{ idp_authn_LDAP_trustCertificates }}"
-    regexp: "^idp.authn.LDAP.trustCertificates"
+    regexp: "idp.authn.LDAP.trustCertificates(.*)="
   notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: LDAP_server_certificate is defined
+  tags:
+    - shibboleth
+    - idp_configure
+    - ldap
+
+- name: Remove LDAP StartTLS Server Certificate
+  lineinfile:
+    dest: "{{ idp_home }}/conf/ldap.properties"
+    line: "#idp.authn.LDAP.trustCertificates                = %{idp.home}/{{ idp_authn_LDAP_trustCertificates }}"
+    regexp: "idp.authn.LDAP.trustCertificates(.*)="
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  when: LDAP_server_certificate is undefined
   tags:
     - shibboleth
     - idp_configure

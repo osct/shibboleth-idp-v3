@@ -8,7 +8,9 @@ Requirements
 ------------
 
 The user database is not installed by this role but it should be created in advance. Currently, OpenLDAP or MySql are supported by this role.
-If none is available a role for LDAP is provided (look at the role named *ldap*)
+If none is available a role for LDAP is provided (look at the role named *ldap*).
+
+The data time in the machine has to be correct so it would be good to syncronize with a time server using some pre-tasks or roles for the time.
 
 Role Variables
 --------------
@@ -19,7 +21,7 @@ A description of the settable variables for this role should go here, including 
 ``idp_attributes_scope``
 
 
-``LDAP.server.certificate``
+``LDAP_server_certificate``
 
 
 
