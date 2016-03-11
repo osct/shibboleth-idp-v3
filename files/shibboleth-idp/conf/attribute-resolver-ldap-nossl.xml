@@ -81,6 +81,7 @@
                 %{idp.attribute.resolver.LDAP.searchFilter}
             ]]>
         </dc:FilterTemplate>
+        <dc:ReturnAttributes>%{idp.attribute.resolver.LDAP.returnAttributes}</dc:ReturnAttributes>
     </resolver:DataConnector>
 
 </resolver:AttributeResolver>
