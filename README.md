@@ -1,14 +1,14 @@
-Role Name
-=========
+shibboleth-idp-v3
+=================
 
-The roles will install the Shibboleth Identity Provider v. 3 with tomcat8 into a debian based machine.
-Tomcat has to be configured from the debian packages because it is
+The role will install the Shibboleth Identity Provider v. 3 with tomcat8 into a debian based machine.
+The integration is made with the packaged version of tomcat which has to be installed in the machine.
+
 
 Requirements
 ------------
 
-The user database is not installed by this role but it should be created in advance. Currently, OpenLDAP or MySql are supported by this role.
-If none is available a role for LDAP is provided (look at the role named *ldap*).
+The user database is not installed by this role but it should be created in advance. Currently, only LDAP is supported by this role but MySqL could be integrated in the future. If none is available a role for LDAP is provided (look at the role named *ldap*).
 
 The data time in the machine has to be correct so it would be good to syncronize with a time server using some pre-tasks or roles for the time.
 
@@ -23,6 +23,11 @@ A description of the settable variables for this role should go here, including 
 
 ``LDAP_server_certificate``
 
+``idp_custom_templates_path``
+
+``idp_custom_css_path``
+
+``idp_custom_images_path``
 
 
 Dependencies

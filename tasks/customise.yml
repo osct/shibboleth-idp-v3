@@ -8,3 +8,36 @@
   tags:
     - shibboleth
     - idp_customise
+
+- name: Apply custom templates
+  copy:
+    src: "{{ idp_custom_templates_path }}"
+    dest: "{{ idp_home }}/views/"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  when: idp_custom_templates_path is defined
+  tags:
+    - shibboleth
+    - idp_customise
+
+- name: Apply custom css
+  copy:
+    src: "{{ idp_custom_css_path }}"
+    dest: "{{ idp_home }}/webapp/css/"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  when: idp_custom_css_path is defined
+  tags:
+    - shibboleth
+    - idp_customise
+
+- name: Apply custom images
+  copy:
+    src: "{{ idp_custom_images_path }}"
+    dest: "{{ idp_home }}/webapp/images/"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  when: idp_custom_images_path is defined
+  tags:
+    - shibboleth
+    - idp_customise
