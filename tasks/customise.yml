@@ -41,3 +41,14 @@
   tags:
     - shibboleth
     - idp_customise
+
+- name: Apply custom messages
+  copy:
+    src: "{{ idp_custom_messages_path }}"
+    dest: "{{ idp_home }}/messages"
+    owner: "{{ tomcat_user }}"
+    group: "{{ tomcat_group }}"
+  when: idp_custom_messages_path is defined
+  tags:
+    - shibboleth
+    - idp_customise

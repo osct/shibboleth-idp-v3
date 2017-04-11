@@ -13,6 +13,24 @@
     - shibboleth
     - idp_install
 
+- name: Install required OS tools
+  apt: update_cache=yes name={{ item }} state=present
+  with_items:
+    - python-pip
+  tags:
+    - shibboleth
+    - python
+    - reqirements
+
+- name: Install required Python tools
+  pip: name={{ item }} state=present
+  with_items:
+    - pexpect
+  tags:
+    - shibboleth
+    - python
+    - reqirements
+
 - name: Get the package
   unarchive:
     src: https://shibboleth.net/downloads/identity-provider/{{ idp_version }}/shibboleth-identity-provider-{{ idp_version }}.tar.gz
@@ -23,6 +41,8 @@
     - idp_install
 
 - name: Execute the installer
+  environment:
+    JAVA_HOME: "{{ java_home }}"
   expect:
     chdir: "{{ idp_package_local_dir }}/shibboleth-identity-provider-{{ idp_version }}"
     creates: "{{ idp_home }}"

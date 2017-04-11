@@ -3,7 +3,7 @@
 ansible_become: yes
 
 # Version of the shibboleth IdP installed
-idp_version: '3.2.1'
+idp_version: '3.3.1'
 
 # Location containing the source package
 idp_package_local_dir: '/root/shibboleth_idp'
@@ -25,3 +25,6 @@ idp_authn_LDAP_trustCertificates: 'credentials/ldap-server.crt'
 
 # Source attribute for the persistent Id
 idp_persistentId_sourceAttribute: 'eduPersonPrincipalName'
+
+# Java home
+java_home: '/usr/lib/jvm/default-java'
