@@ -103,6 +103,36 @@
     - shibboleth
     - idp_configure
 
+- name: Enable Secondary Index
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.session.secondaryServiceIndex = {{ 'true' if idp_session_secondaryIndex else 'false' }}"
+    regexp: "idp.session.secondaryServiceIndex"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_configure
+
+- name: Configure HTML Local Storage
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.storage.htmlLocalStorage = {{ 'true' if idp_storage_html_local else 'false' }}"
+    regexp: "idp.storage.htmlLocalStorage"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_configure
+
+- name: Add logout elaboration
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.logout.elaboration = {{ 'true' if idp_logout_elaboration else 'false' }}"
+    regexp: "idp.logout.elaboration"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_configure
+
 - name: Add metadata providers by url
   template:
     src: shibboleth-idp/conf/metadata-providers.xml.j2
