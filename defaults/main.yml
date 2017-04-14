@@ -16,7 +16,7 @@ idp_authn_LDAP_attribute_resolver: 'shibboleth-idp/conf/attribute-resolver-ldap-
 idp_authn_LDAP_ldapURL: 'ldap://localhost:10389'
 
 # LDAP uses StartTLS
-idp_authn_LDAP_useStartTLS: 'false'
+idp_authn_LDAP_useStartTLS: 'False'
 
 # LDAP base DN
 idp_authn_LDAP_baseDN: 'ou=people,dc=example,dc=org'
