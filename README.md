@@ -48,18 +48,19 @@ The  variables should be configured by the user (default values provided) :
 * ``idp_custom_messages_path``: Path to a property file with custom messages to add to the IdP (string, optional, default: *N/A*)
 * ``metadataproviders``: List of metadata provider to include (array of objects, mandatory, default: *N/A*)
 
-  The *metadataproviders* should have a format like the following:
-  metadataproviders:
-  - name: 'federation1'
-    url: 'url to federation metadata file'
-  - name: 'federation2'
-    url: 'url to federation metadata file'
-    certificate:
-      url: 'url providing the metadata signing certificate'
-  - name: 'federation3'
-    url: 'url to federation metadata file'
-    certificate:
-      path: 'local path to metadata signing certificate'
+The *metadataproviders* should have a format like the following:
+
+    metadataproviders:
+    - name: 'federation1'
+      url: 'url to federation metadata file'
+    - name: 'federation2'
+      url: 'url to federation metadata file'
+      certificate:
+        url: 'url providing the metadata signing certificate'
+    - name: 'federation3'
+      url: 'url to federation metadata file'
+      certificate:
+        path: 'local path to metadata signing certificate'
 
 
 Dependencies
