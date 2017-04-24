@@ -93,6 +93,18 @@
     - shibboleth
     - idp_configure
 
+
+- name: Configure storage subsystem
+  lineinfile:
+    dest: "{{ idp_home }}/conf/idp.properties"
+    line: "idp.session.StorageService = {{ idp_session_storageService }}"
+    regexp: "^idp.session.StorageService"
+  notify: "{{ 'Restart tomcat'  if ansible_virtualization_type != 'docker' else 'Restart tomcat in docker' }}"
+  tags:
+    - shibboleth
+    - idp_configure
+
+
 - name: Enable Single Logout (SLO)
   lineinfile:
     dest: "{{ idp_home }}/conf/idp.properties"

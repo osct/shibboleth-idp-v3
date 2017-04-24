@@ -1,4 +1,7 @@
 <Context docBase="{{ idp_home }}/webapp"
          privileged="true"
          antiResourceLocking="false"
-         swallowOutput="true" />
+         swallowOutput="true">
+
+    <CookieProcessor alwaysAddExpires="true" />
+</Context>

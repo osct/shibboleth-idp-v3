@@ -48,6 +48,9 @@ idp_attribute_filter: 'shibboleth-idp/conf/attribute-filter.xml'
 # Salt for the persistent Id
 idp_persistentId_salt: 'provideasecuresaltpassphraseforthepersistentid'
 
+# Storage service to deploy for the IdP
+idp_session_storageService: shibboleth.StorageService
+
 # Enable Single LogOut (SLO)
 idp_session_trackSPSessions: False
 
